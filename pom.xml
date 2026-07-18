@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>dev.claudecraft</groupId>
+  <artifactId>claudecraft</artifactId>
+  <version>1.0.0</version>
+  <packaging>jar</packaging>
+
+  <name>ClaudeCraft</name>
+  <description>Spigot plugin: chat with Claude in-game and deploy an AI builder bot.</description>
+
+  <properties>
+    <maven.compiler.source>17</maven.compiler.source>
+    <maven.compiler.target>17</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>spigotmc-repo</id>
+      <url>https://hub.spigotmc.org/nexus/content/repositories/snapshots/</url>
+    </repository>
+    <repository>
+      <id>sonatype</id>
+      <url>https://oss.sonatype.org/content/groups/public/</url>
+    </repository>
+  </repositories>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.spigotmc</groupId>
+      <artifactId>spigot-api</artifactId>
+      <version>1.20.4-R0.1-SNAPSHOT</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.anthropic</groupId>
+      <artifactId>anthropic-java</artifactId>
+      <version>2.34.0</version>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <finalName>ClaudeCraft-${project.version}</finalName>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.6.0</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals><goal>shade</goal></goals>
+            <configuration>
+              <createDependencyReducedPom>false</createDependencyReducedPom>
+              <filters>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+              <relocations>
+                <!-- NOTE: com.anthropic and the kotlin stdlib are deliberately NOT
+                     relocated. Both are Kotlin and rely on kotlin-reflect metadata,
+                     which embeds original class names that shade cannot rewrite;
+                     relocating either breaks the SDK at runtime. -->
+                <relocation>
+                  <pattern>com.fasterxml</pattern>
+                  <shadedPattern>dev.claudecraft.libs.fasterxml</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>okhttp3</pattern>
+                  <shadedPattern>dev.claudecraft.libs.okhttp3</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>okio</pattern>
+                  <shadedPattern>dev.claudecraft.libs.okio</shadedPattern>
+                </relocation>
+                <!-- NOTE: the kotlin stdlib is deliberately NOT relocated; relocation
+                     corrupts its .kotlin_builtins resource lookup and breaks the SDK
+                     at class-initialisation time. -->
+                <relocation>
+                  <pattern>org.slf4j</pattern>
+                  <shadedPattern>dev.claudecraft.libs.slf4j</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>org.apache.hc</pattern>
+                  <shadedPattern>dev.claudecraft.libs.apachehc</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>com.github.victools</pattern>
+                  <shadedPattern>dev.claudecraft.libs.victools</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>com.standardwebhooks</pattern>
+                  <shadedPattern>dev.claudecraft.libs.standardwebhooks</shadedPattern>
+                </relocation>
+                <relocation>
+                  <pattern>io.swagger</pattern>
+                  <shadedPattern>dev.claudecraft.libs.swagger</shadedPattern>
+                </relocation>
+              </relocations>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>

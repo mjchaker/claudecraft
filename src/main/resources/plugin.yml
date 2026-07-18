@@ -1,0 +1,25 @@
+name: ClaudeCraft
+version: 1.0.0
+main: dev.claudecraft.ClaudeCraftPlugin
+api-version: '1.20'
+description: Chat with Claude in-game and deploy an AI bot that can see its environment and build.
+author: mohamadchaker
+
+commands:
+  ask:
+    description: Ask Claude a question.
+    usage: /ask <message>
+    aliases: [claude, ai]
+    permission: claudecraft.ask
+  bot:
+    description: Manage the Claude builder bot.
+    usage: /bot <spawn|despawn|task|stop|say|status> [args]
+    permission: claudecraft.bot
+
+permissions:
+  claudecraft.ask:
+    description: Allows chatting with Claude.
+    default: true
+  claudecraft.bot:
+    description: Allows managing the Claude bot.
+    default: op

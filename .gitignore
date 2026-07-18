@@ -1,0 +1,16 @@
+# Build output
+target/
+
+# Local test server — NEVER commit: contains the Anthropic API key in
+# plugins/ClaudeCraft/config.yml, plus world data and the Paper jar.
+test-server/
+
+# Test client dependencies
+test-client/node_modules/
+test-client/package-lock.json
+
+# OS / editor noise
+.DS_Store
+*.iml
+.idea/
+.vscode/
